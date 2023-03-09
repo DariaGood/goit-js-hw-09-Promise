@@ -66,7 +66,7 @@ function convertMs(difInSeconds) {
 
 // Функція для задання кількості символів на таймері
 function addLeadingZero(value) {
-  return value < 0 ? '00' : String(value).padStart(2, '0');
+  return value < 10 ? '00' : String(value).padStart(2, '0');
 }
 function controlTimer() {
   if (difInSeconds > 0) {
