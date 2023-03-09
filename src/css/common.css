@@ -16,3 +16,31 @@ img {
   display: block;
   max-width: 100%;
 }
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content:flex-start;
+  margin-top: 20px; 
+}
+
+.field {
+  text-align: center;
+  width: 55px;
+  margin-right: 5px;
+}
+.field:last-child {
+  margin-right: 0px;
+} 
+
+.value {
+font-size: 40px;
+}
+
+.label  {
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: center;
+
+}
+
