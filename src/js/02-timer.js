@@ -13,7 +13,7 @@ let refs = {
 
 refs.btnStart.setAttribute('disabled', true);
 let timerId = null;
-let ms;
+let difInSeconds;
 
 const options = {
   enableTime: true,
@@ -27,7 +27,7 @@ const options = {
     } else {
       refs.btnStart.removeAttribute('disabled');
       //Розрахунок різниці між сьогоднішньою датою і обратною
-      ms = selectedDates[0] - new Date();
+      difInSeconds = selectedDates[0] - new Date();
     }
   },
 };
@@ -36,22 +36,19 @@ const options = {
 flatpickr(refs.myInput, options);
 
 //Функція розрахунку кіл-ті днів, годин, хв, секунд
-function convertMs(ms) {
+function convertMs(difInSeconds) {
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
-  const days = addLeadingZero(Math.floor(ms / day));
-  // Remaining hours
-  const hours = addLeadingZero(Math.floor((ms % day) / hour));
-  // Remaining minutes
-  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
-  // Remaining seconds
+  // Remaining 
+  const days = addLeadingZero(Math.floor(difInSeconds / day));
+  const hours = addLeadingZero(Math.floor((difInSeconds % day) / hour));
+  const minutes = addLeadingZero(Math.floor(((difInSeconds % day) % hour) / minute));
   const seconds = addLeadingZero(
-    Math.floor((((ms % day) % hour) % minute) / second)
+    Math.floor((((difInSeconds % day) % hour) % minute) / second)
   );
 
   refs.dataDays.textContent = days;
@@ -72,9 +69,9 @@ function addLeadingZero(value) {
   return value < 0 ? '00' : String(value).padStart(2, '0');
 }
 function controlTimer() {
-  if (ms > 0) {
-    ms -= 1000;
-    convertMs(ms);
+  if (difInSeconds > 0) {
+    difInSeconds -= 1000;
+    convertMs(difInSeconds);
   } else {
     timerId = null;
     clearInterval(timerId);
