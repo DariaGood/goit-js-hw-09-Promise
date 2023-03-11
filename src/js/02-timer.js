@@ -44,17 +44,21 @@ function convertMs(difInSeconds) {
   const day = hour * 24;
 
   // Remaining 
-  const days = addLeadingZero(Math.floor(difInSeconds / day));
-  const hours = addLeadingZero(Math.floor((difInSeconds % day) / hour));
-  const minutes = addLeadingZero(Math.floor(((difInSeconds % day) % hour) / minute));
-  const seconds = addLeadingZero(
-    Math.floor((((difInSeconds % day) % hour) % minute) / second)
-  );
+  // const days = addLeadingZero(Math.floor(difInSeconds / day));
+  // const hours = addLeadingZero(Math.floor((difInSeconds % day) / hour));
+  // const minutes = addLeadingZero(Math.floor(((difInSeconds % day) % hour) / minute));
+  // const seconds = addLeadingZero(Math.floor((((difInSeconds % day) % hour) % minute) / second));
 
-  refs.dataDays.textContent = days;
-  refs.dataHours.textContent = hours;
-  refs.dataMinutes.textContent = minutes;
-  refs.dataSeconds.textContent = seconds;
+
+  const days = Math.floor(difInSeconds / day);
+  const hours = Math.floor((difInSeconds % day) / hour);
+  const minutes = Math.floor(((difInSeconds % day) % hour) / minute);
+  const seconds = Math.floor((((difInSeconds % day) % hour) % minute) / second);         
+
+  refs.dataDays.textContent = addLeadingZero(days);
+  refs.dataHours.textContent = addLeadingZero(hours);
+  refs.dataMinutes.textContent = addLeadingZero(minutes);
+  refs.dataSeconds.textContent = addLeadingZero(seconds);
 
   // Кількість символів на таймері
   // refs.dataDays.textContent = days  < 10 ? '0' + days : days;
@@ -64,10 +68,12 @@ function convertMs(difInSeconds) {
   return { days, hours, minutes, seconds };
 }
 
-// Функція для задання кількості символів на таймері
+//Функція для задання кількості символів на таймері
 function addLeadingZero(value) {
-  return value < 10 ? '00' : String(value).padStart(2, '0');
+  //return value < 10 ? '00' : String(value).padStart(2, '0');
+  return (value < 10) ? '0' + value : value;
 }
+
 function controlTimer() {
   if (difInSeconds > 0) {
     difInSeconds -= 1000;
@@ -80,4 +86,7 @@ function controlTimer() {
 
 refs.btnStart.addEventListener('click', () => {
   timerId = setInterval(controlTimer, 1000);
+  refs.btnStart.disabled = true; 
+  console.log("ghjgj")
+
 });
