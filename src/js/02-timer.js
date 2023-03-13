@@ -11,8 +11,8 @@ let refs = {
   dataSeconds: document.querySelector('[data-seconds]'),
 };
 
-refs.btnStart.setAttribute('disabled', true);
 let timerId = null;
+let selectedNewDate;
 let difInSeconds;
 
 const options = {
@@ -21,19 +21,34 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    //Обрати дату
+    //Умова для вибору дати
     if (selectedDates[0] < new Date()) {
       Notiflix.Notify.warning('Please choose a date in the future');
     } else {
       refs.btnStart.removeAttribute('disabled');
-      //Розрахунок різниці між сьогоднішньою датою і обратною
-      difInSeconds = selectedDates[0] - new Date();
+      //Записуємо обрану дату в зовн.змінну
+      selectedNewDate = selectedDates[0].getTime();
+      console.log(new Date());
     }
   },
 };
 
+refs.btnStart.setAttribute('disabled', true);
+
 //Викликаємо екземпляр flatpickr
 flatpickr(refs.myInput, options);
+
+function controlTimer() {
+  const currentTime = new Date().getTime();
+  difInSeconds = selectedNewDate - currentTime;
+
+  if (difInSeconds > 0) {
+    convertMs(difInSeconds);
+  } else {
+    timerId = null;
+    clearInterval(timerId);
+  }
+}
 
 //Функція розрахунку кіл-ті днів, годин, хв, секунд
 function convertMs(difInSeconds) {
@@ -43,17 +58,11 @@ function convertMs(difInSeconds) {
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining 
-  // const days = addLeadingZero(Math.floor(difInSeconds / day));
-  // const hours = addLeadingZero(Math.floor((difInSeconds % day) / hour));
-  // const minutes = addLeadingZero(Math.floor(((difInSeconds % day) % hour) / minute));
-  // const seconds = addLeadingZero(Math.floor((((difInSeconds % day) % hour) % minute) / second));
-
-
+  // Remaining
   const days = Math.floor(difInSeconds / day);
   const hours = Math.floor((difInSeconds % day) / hour);
   const minutes = Math.floor(((difInSeconds % day) % hour) / minute);
-  const seconds = Math.floor((((difInSeconds % day) % hour) % minute) / second);         
+  const seconds = Math.floor((((difInSeconds % day) % hour) % minute) / second);
 
   refs.dataDays.textContent = addLeadingZero(days);
   refs.dataHours.textContent = addLeadingZero(hours);
@@ -68,25 +77,13 @@ function convertMs(difInSeconds) {
   return { days, hours, minutes, seconds };
 }
 
-//Функція для задання кількості символів на таймері
+//Функція для задання кількості символів в таймері
 function addLeadingZero(value) {
   //return value < 10 ? '00' : String(value).padStart(2, '0');
-  return (value < 10) ? '0' + value : value;
-}
-
-function controlTimer() {
-  if (difInSeconds > 0) {
-    difInSeconds -= 1000;
-    convertMs(difInSeconds);
-  } else {
-    timerId = null;
-    clearInterval(timerId);
-  }
+  return value < 10 ? '0' + value : value;
 }
 
 refs.btnStart.addEventListener('click', () => {
   timerId = setInterval(controlTimer, 1000);
-  refs.btnStart.disabled = true; 
-  console.log("ghjgj")
-
+  refs.btnStart.disabled = true;
 });
